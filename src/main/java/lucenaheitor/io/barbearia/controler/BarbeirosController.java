@@ -2,8 +2,9 @@ package lucenaheitor.io.barbearia.controler;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.validation.Validation;
-import lucenaheitor.io.barbearia.controler.validation.ValidationBarbeiros;
+import lucenaheitor.io.barbearia.controler.validation.ValidationBarbeiro;
+import lucenaheitor.io.barbearia.controler.validation.ValidationBarbeirosEmail;
+import lucenaheitor.io.barbearia.controler.validation.ValidationCpfBarbeiros;
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
 import lucenaheitor.io.barbearia.domain.barbeiros.DetailsBarbeiros;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +14,25 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/barbeiros")
 public class BarbeirosController {
 
         @Autowired
         private BarbeiroRepository repository;
+
         @Autowired
-        private ValidationBarbeiros validation;
+        private List<ValidationBarbeiro> validadores;
 
     @PostMapping
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid CadastroBarbeiroDTO data){
             var barbeiro = new Barbeiro(data);
-            validation.validar(barbeiro.getEmail());
+
+            validadores.forEach(v -> v.validar(data));
+
             repository.save(barbeiro);
             return  ResponseEntity.ok(barbeiro);
     }

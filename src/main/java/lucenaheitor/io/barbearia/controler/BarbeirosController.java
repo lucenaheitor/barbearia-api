@@ -3,6 +3,7 @@ package lucenaheitor.io.barbearia.controler;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
+import lucenaheitor.io.barbearia.domain.barbeiros.DetailsBarbeiros;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class BarbeirosController {
             return  ResponseEntity.ok(barbeiro);
     }
     @GetMapping
-    public ResponseEntity<Page<ListagemBarbeirosDTO>> listar (@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+    public ResponseEntity<Page<ListagemBarbeirosDTO>> listar (@PageableDefault(size = 5, sort = {"nome"}) Pageable paginacao){
         var page = repository.findAll(paginacao).map(ListagemBarbeirosDTO::new);
         return  ResponseEntity.ok(page);
     }

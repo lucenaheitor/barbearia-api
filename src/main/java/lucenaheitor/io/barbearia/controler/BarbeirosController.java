@@ -2,9 +2,7 @@ package lucenaheitor.io.barbearia.controler;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lucenaheitor.io.barbearia.controler.validation.ValidationBarbeiro;
-import lucenaheitor.io.barbearia.controler.validation.ValidationBarbeirosEmail;
-import lucenaheitor.io.barbearia.controler.validation.ValidationCpfBarbeiros;
+import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
 import lucenaheitor.io.barbearia.domain.barbeiros.DetailsBarbeiros;
 import org.springframework.beans.factory.annotation.Autowired;

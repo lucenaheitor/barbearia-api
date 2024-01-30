@@ -1,4 +1,4 @@
-package lucenaheitor.io.barbearia.controler.validation;
+package lucenaheitor.io.barbearia.controler.validation_barbeiros;
 
 import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
 

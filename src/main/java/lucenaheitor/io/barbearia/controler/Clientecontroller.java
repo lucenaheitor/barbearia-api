@@ -27,7 +27,7 @@ public class Clientecontroller {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid CadastroClienteDTO data){
         var cliente = new Cliente(data);
-        
+
         validadores.forEach(v -> v.validar(data));
 
         repository.save(cliente);

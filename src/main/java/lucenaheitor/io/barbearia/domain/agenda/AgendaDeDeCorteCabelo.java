@@ -26,7 +26,7 @@ public class AgendaDeDeCorteCabelo {
         }
 
         if(data.idBarbeiro() != null &&  !barbeiroRespository.existsById(data.idBarbeiro())){
-            throw  new ValidationExeception("Id do médico é invalido");
+            throw  new ValidationExeception("Id do barbeiro é invalido");
         }
 
         var cliente =  clienteRespository.getReferenceById(data.idCliente());

@@ -33,7 +33,11 @@ public class Agenda {
 
     private LocalDateTime date;
 
-//    @Column(name = "cancelamento")
-//    @Enumerated(EnumType.STRING)
-//    private Cacelamento cancelamento;
+    @Column(name = "cancelamento")
+    @Enumerated(EnumType.STRING)
+    private Cancelamento cancelamento;
+
+    public void cancelarAtendimento(Cancelamento cancelamento) {
+        this.cancelamento = cancelamento;
+    }
 }

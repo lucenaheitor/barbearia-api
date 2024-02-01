@@ -15,7 +15,7 @@ public interface BarbeiroRepository  extends JpaRepository<Barbeiro, Long> {
     where
     b.especialidade = :especialidade
     and
-    b.id not in(
+    b.nome not in(
         select a.barbeiro.id from Agenda a
         where
         a.date = :date

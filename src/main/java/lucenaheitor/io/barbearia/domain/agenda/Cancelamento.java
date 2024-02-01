@@ -1,6 +1,6 @@
 package lucenaheitor.io.barbearia.domain.agenda;
 
-public enum Cacelamento {
+public enum Cancelamento {
     BARBEIRO_CANCELOU,
 
     CLIENTE_CANCELOU,

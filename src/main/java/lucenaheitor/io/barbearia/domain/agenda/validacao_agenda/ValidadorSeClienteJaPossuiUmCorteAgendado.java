@@ -16,7 +16,7 @@ public class ValidadorSeClienteJaPossuiUmCorteAgendado implements  ValidacaoAgen
     public void validar(AgendamentoCorteDTO data) {
         var horarioAbertura = data.date().withHour(7);
         var horarioFechamento = data.date().withHour(20);
-        var clienteTemHorarioNoDia =  repository.existsByClienteIfAndDateBetween(data.idCliente(), horarioAbertura, horarioFechamento);
+        var clienteTemHorarioNoDia =  repository.existsByClienteIdAndDateBetween(data.idCliente(), horarioAbertura, horarioFechamento);
         if(clienteTemHorarioNoDia){
             throw  new ValidationExeception("Cliente ja possui horario nesse dia");
         }

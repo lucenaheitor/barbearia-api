@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AgendaController {
 
     @Autowired
-    private AgendaDeDeCorteCabelo agenda;
+    private  AgendaDeDeCorteCabelo agenda;
 
     @PostMapping
     @Transactional

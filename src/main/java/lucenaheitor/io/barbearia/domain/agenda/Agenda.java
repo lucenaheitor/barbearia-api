@@ -38,6 +38,7 @@ public class Agenda {
     private Cancelamento cancelamento;
 
     public void cancelarAtendimento(Cancelamento cancelamento) {
+
         this.cancelamento = cancelamento;
     }
 }

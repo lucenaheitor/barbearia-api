@@ -1,4 +1,4 @@
 package lucenaheitor.io.barbearia.domain.usuario;
 
-public record RegisterDTO(String login, String password) {
+public record RegisterDTO(String login, String password, UserRole role) {
 }

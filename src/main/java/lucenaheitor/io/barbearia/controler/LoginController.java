@@ -33,7 +33,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-        var userNamePassword =  new UsernamePasswordAuthenticationToken(data.Login(), data.password());
+        var userNamePassword =  new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(userNamePassword);
         var tokenJWT =  tokenService.generateToken((Usuario) auth.getPrincipal());
 
@@ -45,7 +45,7 @@ public class LoginController {
         if (this.repository.findByLogin(data.login()) != null) return  ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.login(),  encryptedPassword);
+        Usuario newUser = new Usuario(data.login(),  encryptedPassword, data.role());
 
         this.repository.save(newUser);
         return  ResponseEntity.ok().build();

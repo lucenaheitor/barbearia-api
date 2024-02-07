@@ -3,7 +3,7 @@ package lucenaheitor.io.barbearia.controler;
 import jakarta.validation.Valid;
 import lucenaheitor.io.barbearia.domain.usuario.AuthenticationDTO;
 import lucenaheitor.io.barbearia.domain.usuario.RegisterDTO;
-import lucenaheitor.io.barbearia.domain.usuario.UserRespository;
+import lucenaheitor.io.barbearia.domain.usuario.UserRepository;
 import lucenaheitor.io.barbearia.domain.usuario.Usuario;
 import lucenaheitor.io.barbearia.infra.security.DataTokenJWT;
 import lucenaheitor.io.barbearia.infra.security.TokenService;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthtenicationController {
+public class LoginController {
 
     @Autowired
-    private UserRespository repository;
+    private UserRepository repository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -31,7 +31,7 @@ public class AuthtenicationController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public  ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var userNamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth =  this.authenticationManager.authenticate(userNamePassword);

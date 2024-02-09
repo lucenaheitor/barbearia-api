@@ -1,5 +1,6 @@
 package lucenaheitor.io.barbearia.controler;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lucenaheitor.io.barbearia.domain.agenda.AgendaDeDeCorteCabelo;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/agenda")
+@SecurityRequirement(name = "bearer-key")
 public class AgendaController {
 
     @Autowired

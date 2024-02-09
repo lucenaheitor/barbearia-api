@@ -1,5 +1,6 @@
 package lucenaheitor.io.barbearia.controler;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lucenaheitor.io.barbearia.controler.validation_clientes.ValidationClientes;
 import lucenaheitor.io.barbearia.domain.clientes.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
+@SecurityRequirement(name = "bearer-key")
 public class Clientecontroller {
 
     @Autowired

@@ -38,10 +38,10 @@ public class LoginController {
     public  ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
 
 
-       var userNamePaaword =  new UsernamePasswordAuthenticationToken(data.login(), data.password());
-       var auth = this.authenticationManager.authenticate(userNamePaaword);
-       var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-       return  ResponseEntity.ok(new DataTokenJWT(token));
+        var userNamePaaword =  new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var auth = this.authenticationManager.authenticate(userNamePaaword);
+        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+        return  ResponseEntity.ok(new DataTokenJWT(token));
     }
 
 
@@ -58,5 +58,5 @@ public class LoginController {
         return  ResponseEntity.ok().build();
 
     }
-    
+
 }

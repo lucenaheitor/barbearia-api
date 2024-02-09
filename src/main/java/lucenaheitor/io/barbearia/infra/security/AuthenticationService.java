@@ -1,23 +1,25 @@
 package lucenaheitor.io.barbearia.infra.security;
 
 
-import lucenaheitor.io.barbearia.domain.usuario.UserRepository;
+import lucenaheitor.io.barbearia.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
+//classe responsavel pela logica da autenticação
+
 @Service
 public class AuthenticationService implements UserDetailsService {
 
     @Autowired
-    private UserRepository repository;
-
+    private UsuarioRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByLogin(username);
 
+        return repository.findByLogin(username);
     }
 }

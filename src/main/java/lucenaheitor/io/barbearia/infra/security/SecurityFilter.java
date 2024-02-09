@@ -4,10 +4,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lucenaheitor.io.barbearia.domain.usuario.UserRepository;
+import lucenaheitor.io.barbearia.domain.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,7 +21,7 @@ public class SecurityFilter  extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UserRepository userRespository;
+    private UsuarioRepository usuarioRespository;
 
 
     @Override
@@ -29,10 +30,10 @@ public class SecurityFilter  extends OncePerRequestFilter {
 
         if(tokenJWT != null){
             var subject =  tokenService.getSubject(tokenJWT);
-            var usuario = userRespository.findByLogin(subject);
+            UserDetails usuario = usuarioRespository.findByLogin(subject);
 
-            var authenticattion =  new UsernamePasswordAuthenticationToken(usuario, null,  usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticattion);
+            var authentication =  new UsernamePasswordAuthenticationToken(usuario, null,  usuario.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

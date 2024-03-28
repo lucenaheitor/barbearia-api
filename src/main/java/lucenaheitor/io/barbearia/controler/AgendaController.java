@@ -28,7 +28,7 @@ public class AgendaController {
     @DeleteMapping
     @Transactional
     public  ResponseEntity cancelarAtendimento(@RequestBody @Valid CancelamentoDTO data){
-        agenda.cancelarAtendimentoa(data);
+        agenda.cancelar(data);
         return  ResponseEntity.noContent().build();
     }
 

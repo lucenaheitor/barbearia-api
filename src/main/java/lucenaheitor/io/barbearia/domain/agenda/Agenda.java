@@ -27,6 +27,7 @@ public class Agenda {
     private Barbeiro barbeiro;
 
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

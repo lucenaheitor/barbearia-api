@@ -43,6 +43,7 @@ public class AgendaDeDeCorteCabelo {
         if(barbeiro == null){
             throw  new ValidationExeception("Nenhum barbeiro disponivel nessa data");
         }
+
         var agenda = new Agenda(null, barbeiro, cliente, data.date(), null);
 
         agendaRepository.save(agenda);
@@ -59,7 +60,7 @@ public class AgendaDeDeCorteCabelo {
         return  barbeiroRespository.escolherBarbeiroAleatorio(data.especialidade(), data.date());
     }
 
-    public void cancelarAtendimentoa(CancelamentoDTO data){
+    public void cancelar(CancelamentoDTO data){
         if(!agendaRepository.existsById(data.idAgenda())){
             throw  new ValidationExeception("Id da consulta invalido");
         }

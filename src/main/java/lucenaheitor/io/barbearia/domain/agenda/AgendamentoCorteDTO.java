@@ -13,10 +13,6 @@ public record AgendamentoCorteDTO(
         @NotNull
         Long idCliente,
 
-        String nomeCliente,
-
-        String nomeBarbeiro,
-
         @NotNull
         @Future
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")

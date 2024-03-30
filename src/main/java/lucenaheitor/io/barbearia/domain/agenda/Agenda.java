@@ -38,7 +38,7 @@ public class Agenda {
     @Enumerated(EnumType.STRING)
     private Cancelamento cancelamento;
 
-    public void cancelarAtendimento(Cancelamento cancelamento) {
+    public void cancelar(Cancelamento cancelamento) {
 
         this.cancelamento = cancelamento;
     }

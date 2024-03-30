@@ -2,6 +2,7 @@ package lucenaheitor.io.barbearia.domain.agenda;
 
 
 import lucenaheitor.io.barbearia.domain.agenda.validacao_agenda.ValidacaoAgendamento;
+import lucenaheitor.io.barbearia.domain.agenda.validation_cancel.CancelamentoAgenda;
 import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.BarbeiroRepository;
 import lucenaheitor.io.barbearia.domain.clientes.ClienteRepository;
@@ -25,6 +26,9 @@ public class AgendaDeDeCorteCabelo {
 
     @Autowired
     private List<ValidacaoAgendamento> validadores;
+
+    @Autowired
+    private List<CancelamentoAgenda> cancelamentoValidacao;
 
     public  DetalhamentoCorteDeCabelo agendar(AgendamentoCorteDTO data){
         if(!clienteRespository.existsById(data.idCliente())){
@@ -62,10 +66,13 @@ public class AgendaDeDeCorteCabelo {
 
     public void cancelar(CancelamentoDTO data){
         if(!agendaRepository.existsById(data.idAgenda())){
-            throw  new ValidationExeception("Id da consulta invalido");
+            throw  new ValidationExeception("Agendamento não existe");
         }
+
+        cancelamentoValidacao.forEach(c -> c.cancelar(data));
+
         var agenda = agendaRepository.getReferenceById(data.idAgenda());
-        agenda.cancelarAtendimento(data.cancelamento());
+        agenda.cancelar(data.cancelamento());
     }
 
 }

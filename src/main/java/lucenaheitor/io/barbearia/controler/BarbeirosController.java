@@ -30,9 +30,7 @@ public class BarbeirosController {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid CadastroBarbeiroDTO data){
             var barbeiro = new Barbeiro(data);
-
             validadores.forEach(v -> v.validar(data));
-
             repository.save(barbeiro);
             return  ResponseEntity.ok(barbeiro);
     }

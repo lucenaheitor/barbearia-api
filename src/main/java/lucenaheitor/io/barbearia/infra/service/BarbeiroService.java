@@ -39,7 +39,6 @@ public class BarbeiroService {
     public  AtualizationoBarbeirosDTO update(AtualizationoBarbeirosDTO dto) {
             Barbeiro barbeiro = modelMapper.map(dto, Barbeiro.class);
             barbeiroRepository.getReferenceById(barbeiro.getId());
-            modelMapper.map(barbeiro, dto);
             barbeiroRepository.save(barbeiro);
             return modelMapper.map(barbeiro, AtualizationoBarbeirosDTO.class);
     }

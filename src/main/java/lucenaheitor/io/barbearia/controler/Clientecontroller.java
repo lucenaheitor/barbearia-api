@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lucenaheitor.io.barbearia.controler.validation_clientes.ValidationClientes;
 import lucenaheitor.io.barbearia.domain.clientes.*;
+import lucenaheitor.io.barbearia.infra.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,15 +26,14 @@ public class Clientecontroller {
     @Autowired
     private List<ValidationClientes> validadores;
 
+    @Autowired
+    private ClienteService service;
+
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid CadastroClienteDTO data){
-        var cliente = new Cliente(data);
-
-        validadores.forEach(v -> v.validar(data));
-
-        repository.save(cliente);
-        return  ResponseEntity.ok(cliente);
+    public ResponseEntity<CadastroClienteDTO> cadastrar(@RequestBody @Valid CadastroClienteDTO dto){
+      CadastroClienteDTO clienteDTO = service.createCliente(dto);
+      return ResponseEntity.ok(clienteDTO);
     }
     @GetMapping
     public ResponseEntity<Page<ListagemClientesDTO>> listar (@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){

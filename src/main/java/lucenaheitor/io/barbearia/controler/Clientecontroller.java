@@ -36,15 +36,15 @@ public class Clientecontroller {
       return ResponseEntity.ok(clienteDTO);
     }
     @GetMapping
-    public ResponseEntity<Page<ListagemClientesDTO>> listar (@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
-        var page = repository.findAll(paginacao).map(ListagemClientesDTO::new);
-        return  ResponseEntity.ok(page);
+    public ResponseEntity<Page<ListagemClientesDTO>> list (@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+        Page clienteDto = service.getClient(paginacao);
+        return  ResponseEntity.ok(clienteDto);
     }
 
     @GetMapping("/{id}")
     public  ResponseEntity detail(@PathVariable Long id){
-        var barbeiro = repository.getReferenceById(id);
-        return  ResponseEntity.ok(new DetailsClientesDTO(barbeiro));
+        DetailsClientesDTO cliente = service.detailClient(id);
+        return ResponseEntity.ok(cliente);
     }
 
     @PutMapping
@@ -58,7 +58,7 @@ public class Clientecontroller {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity delete(@PathVariable Long id ){
-        repository.deleteById(id);
+        service.deleteClient(id);
         return  ResponseEntity.noContent().build();
     }
 }

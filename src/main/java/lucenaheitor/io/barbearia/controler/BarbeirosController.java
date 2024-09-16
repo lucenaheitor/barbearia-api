@@ -26,8 +26,6 @@ public class BarbeirosController {
         @Autowired
         private BarbeiroRepository repository;
 
-        @Autowired
-        private List<ValidationBarbeiro> validadores;
 
         @Autowired
         private BarbeiroService service;

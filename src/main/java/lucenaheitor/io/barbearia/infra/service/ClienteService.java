@@ -1,6 +1,8 @@
 package lucenaheitor.io.barbearia.infra.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;
+import lucenaheitor.io.barbearia.controler.validation_clientes.ValidationClientes;
 import lucenaheitor.io.barbearia.domain.barbeiros.AtualizationoBarbeirosDTO;
 import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
 import lucenaheitor.io.barbearia.domain.clientes.*;
@@ -11,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ClienteService {
 
@@ -20,13 +24,18 @@ public class ClienteService {
     @Autowired
     private ModelMapper modelmapper;
 
+    @Autowired
+    private List<ValidationClientes> validadores;
+
 
     public CadastroClienteDTO createCliente(CadastroClienteDTO dto) {
         Cliente cliente = modelmapper.map(dto, Cliente.class);
-         clienteRepository.save(cliente);
+        validadores.forEach(v -> v.validar(dto));
+        clienteRepository.save(cliente);
 
         return modelmapper.map(cliente, CadastroClienteDTO.class);
     }
+
 
     public Page<ListagemClientesDTO> getClient(Pageable pageable) {
         return clienteRepository.findAll(pageable)

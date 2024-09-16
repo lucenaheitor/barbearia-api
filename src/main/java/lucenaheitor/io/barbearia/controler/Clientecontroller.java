@@ -23,15 +23,13 @@ public class Clientecontroller {
     @Autowired
     private ClienteRepository repository;
 
-    @Autowired
-    private List<ValidationClientes> validadores;
 
     @Autowired
     private ClienteService service;
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CadastroClienteDTO> cadastrar(@RequestBody @Valid CadastroClienteDTO dto){
+    public ResponseEntity<CadastroClienteDTO> register(@RequestBody @Valid CadastroClienteDTO dto){
       CadastroClienteDTO clienteDTO = service.createCliente(dto);
       return ResponseEntity.ok(clienteDTO);
     }

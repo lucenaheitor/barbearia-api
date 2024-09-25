@@ -18,7 +18,9 @@ public record AgendamentoCorteDTO(
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
         LocalDateTime date,
 
-        Especialidade especialidade) {
+        Especialidade especialidade,
+
+        Status status) {
 
 }
 

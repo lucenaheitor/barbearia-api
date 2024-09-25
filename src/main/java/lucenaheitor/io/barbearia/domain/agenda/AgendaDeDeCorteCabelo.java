@@ -1,12 +1,14 @@
 package lucenaheitor.io.barbearia.domain.agenda;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import lucenaheitor.io.barbearia.domain.agenda.validacao_agenda.ValidacaoAgendamento;
 import lucenaheitor.io.barbearia.domain.agenda.validation_cancel.CancelamentoAgenda;
 import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.BarbeiroRepository;
 import lucenaheitor.io.barbearia.domain.clientes.ClienteRepository;
 import lucenaheitor.io.barbearia.infra.exception.ValidationExeception;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import java.util.List;
 
 @Service
 public class AgendaDeDeCorteCabelo {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private BarbeiroRepository barbeiroRespository;
@@ -48,7 +53,7 @@ public class AgendaDeDeCorteCabelo {
             throw  new ValidationExeception("Nenhum barbeiro disponivel nessa data");
         }
 
-        var agenda = new Agenda(null, barbeiro, cliente, data.date(), null);
+        var agenda = new Agenda(null, barbeiro, cliente, data.date(), null, null);
 
         agendaRepository.save(agenda);
         return  new DetalhamentoCorteDeCabelo(agenda);
@@ -73,6 +78,31 @@ public class AgendaDeDeCorteCabelo {
 
         var agenda = agendaRepository.getReferenceById(data.idAgenda());
         agenda.cancelar(data.cancelamento());
+    }
+
+    public AgendamentoCorteDTO atualizaStatus(Long id, StatusDto dto) {
+
+        var  agenda = agendaRepository.findAgendaById(id);
+
+        if (agenda == null) {
+            throw new EntityNotFoundException();
+        }
+
+        agenda.set(dto.getStatus());
+        agendaRepository.updateStatus(dto.getStatus(), agenda);
+        return modelMapper.map(agenda,  AgendamentoCorteDTO.class);
+    }
+
+    public void aprovaPagamentoPedido(Long id) {
+
+        Pedido pedido = repository.porIdComItens(id);
+
+        if (pedido == null) {
+            throw new EntityNotFoundException();
+        }
+
+        pedido.setStatus(Status.PAGO);
+        repository.atualizaStatus(Status.PAGO, pedido);
     }
 
 }

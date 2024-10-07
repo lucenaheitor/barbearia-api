@@ -1,14 +1,26 @@
 package lucenaheitor.io.barbearia.domain.agenda;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class StatusDto {
-    private  Status status;
+
+    private Status status;
+
+    // Construtor sem parâmetros (equivalente ao @NoArgsConstructor)
+    public StatusDto() {
+    }
+
+    // Construtor com parâmetros (equivalente ao @AllArgsConstructor)
+    public StatusDto(Status status) {
+        this.status = status;
+    }
+
+    // Getter para o campo status
+    public Status getStatus() {
+        return status;
+    }
+
+    // Setter para o campo status
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

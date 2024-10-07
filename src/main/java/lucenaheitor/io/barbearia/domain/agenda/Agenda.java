@@ -1,10 +1,8 @@
 package lucenaheitor.io.barbearia.domain.agenda;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
 import lucenaheitor.io.barbearia.domain.clientes.Cliente;
 
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "agendas")
 @Entity(name = "Agenda")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -38,6 +37,8 @@ public class Agenda {
     @Enumerated(EnumType.STRING)
     private Cancelamento cancelamento;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     Status status;
 
     public void cancelar(Cancelamento cancelamento) {

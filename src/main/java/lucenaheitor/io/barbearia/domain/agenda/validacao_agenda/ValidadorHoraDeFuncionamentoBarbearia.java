@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ValidadorHoraDeFuncionamentoBarbearia implements  ValidacaoAgendamento{
     @Override
     public void validar(AgendamentoCorteDTO data) {
-        LocalDateTime dataHoraAtendimento = data.date();
+        LocalDateTime dataHoraAtendimento = data.getDate();
 
         // Verificar se é domingo
         if (dataHoraAtendimento.getDayOfWeek() == DayOfWeek.SUNDAY) {

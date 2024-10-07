@@ -2,6 +2,7 @@ package lucenaheitor.io.barbearia.domain.agenda;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
 import lucenaheitor.io.barbearia.domain.agenda.validacao_agenda.ValidacaoAgendamento;
 import lucenaheitor.io.barbearia.domain.agenda.validation_cancel.CancelamentoAgenda;
 import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
@@ -12,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AgendaDeDeCorteCabelo {
@@ -35,38 +38,44 @@ public class AgendaDeDeCorteCabelo {
     @Autowired
     private List<CancelamentoAgenda> cancelamentoValidacao;
 
-    public  DetalhamentoCorteDeCabelo agendar(AgendamentoCorteDTO data){
-        if(!clienteRespository.existsById(data.idCliente())){
-            throw  new ValidationExeception("Id do cliente invalido!");
+    public DetalhamentoCorteDeCabelo agendar(AgendamentoCorteDTO data) {
+        if (!clienteRespository.existsById(data.getIdCliente())) {
+            throw new ValidationException("Id do cliente inválido!");
         }
 
-        if(data.idBarbeiro() != null &&  !barbeiroRespository.existsById(data.idBarbeiro())){
-            throw  new ValidationExeception("Id do barbeiro é invalido");
+        if (data.getIdBarbeiro() != null && !barbeiroRespository.existsById(data.getIdBarbeiro())) {
+            throw new ValidationException("Id do barbeiro é inválido");
         }
 
         validadores.forEach(v -> v.validar(data));
 
-        var cliente =  clienteRespository.getReferenceById(data.idCliente());
-        var barbeiro =  escolherBarbeiro(data);
+        var cliente = clienteRespository.getReferenceById(data.getIdCliente());
+        var barbeiro = escolherBarbeiro(data);
 
-        if(barbeiro == null){
-            throw  new ValidationExeception("Nenhum barbeiro disponivel nessa data");
+        if (barbeiro == null) {
+            throw new ValidationException("Nenhum barbeiro disponível nessa data");
         }
 
-        var agenda = new Agenda(null, barbeiro, cliente, data.date(), null, null);
+        var agenda = modelMapper.map(data, Agenda.class);
+
+        agenda.setDate(LocalDateTime.now());
+        agenda.setStatus(Status.REALIZADO);
+        agenda.setCliente(cliente);
+        agenda.setBarbeiro(barbeiro);
 
         agendaRepository.save(agenda);
-        return  new DetalhamentoCorteDeCabelo(agenda);
+
+        return modelMapper.map(agenda, DetalhamentoCorteDeCabelo.class);
     }
 
     private Barbeiro escolherBarbeiro(AgendamentoCorteDTO data) {
-        if(data.idBarbeiro() != null){
-            return  barbeiroRespository.getReferenceById(data.idBarbeiro());
+        if(data.getIdBarbeiro() != null){
+            return  barbeiroRespository.getReferenceById(data.getIdBarbeiro());
         }
-        if (data.especialidade() == null){
+        if (data.getEspecialidade() == null){
             throw  new ValidationExeception("Esdpecialidade obrigatoria");
         }
-        return  barbeiroRespository.escolherBarbeiroAleatorio(data.especialidade(), data.date());
+        return  barbeiroRespository.escolherBarbeiroAleatorio(data.getEspecialidade(), data.getDate());
     }
 
     public void cancelar(CancelamentoDTO data){
@@ -80,29 +89,29 @@ public class AgendaDeDeCorteCabelo {
         agenda.cancelar(data.cancelamento());
     }
 
-    public AgendamentoCorteDTO atualizaStatus(Long id, StatusDto dto) {
+    public DetalhamentoCorteDeCabelo atualizaStatus(Long id, StatusDto dto) {
 
-        var  agenda = agendaRepository.findAgendaById(id);
+        Optional<Agenda> agenda= agendaRepository.findAgendaById(id);
 
-        if (agenda == null) {
+        if (agenda.isEmpty()) {
             throw new EntityNotFoundException();
         }
 
-        agenda.set(dto.getStatus());
-        agendaRepository.updateStatus(dto.getStatus(), agenda);
-        return modelMapper.map(agenda,  AgendamentoCorteDTO.class);
+        agenda.get().setStatus(dto.getStatus());
+        agendaRepository.updateStatus(dto.getStatus(), agenda.get());
+        return modelMapper.map(agenda, DetalhamentoCorteDeCabelo.class);
     }
 
     public void aprovaPagamentoPedido(Long id) {
 
-        Pedido pedido = repository.porIdComItens(id);
+        Optional<Agenda> agenda = agendaRepository.findAgendaById(id);
 
-        if (pedido == null) {
+        if (agenda.isEmpty()) {
             throw new EntityNotFoundException();
         }
 
-        pedido.setStatus(Status.PAGO);
-        repository.atualizaStatus(Status.PAGO, pedido);
+        agenda.get().setStatus(Status.PAGO);
+        agendaRepository.updateStatus(Status.PAGO, agenda.get());
     }
 
 }

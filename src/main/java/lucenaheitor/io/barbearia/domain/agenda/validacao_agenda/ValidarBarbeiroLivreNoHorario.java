@@ -13,7 +13,7 @@ public class ValidarBarbeiroLivreNoHorario  implements  ValidacaoAgendamento{
     private AgendaRepository repository;
     @Override
     public void validar(AgendamentoCorteDTO data) {
-        var barbeiroOcupado =  repository.existsByBarbeiroIdAndDateAndCancelamentoIsNull(data.idBarbeiro(), data.date());
+        var barbeiroOcupado =  repository.existsByBarbeiroIdAndDateAndCancelamentoIsNull(data.getIdBarbeiro(), data.getDate());
         if(barbeiroOcupado){
             throw   new ValidationExeception("Barbeiro ocupado nesse horario");
         }

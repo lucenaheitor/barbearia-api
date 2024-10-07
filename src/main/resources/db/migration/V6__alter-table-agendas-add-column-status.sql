@@ -1,0 +1,1 @@
+ALTER TABLE agendas ADD COLUMN status NOT NULL;

@@ -27,7 +27,7 @@ public class AgendaController {
 
         URI adress = uriBuilder.path("/agenda/{id").buildAndExpand(dto.getId()).toUri();
 
-        return  ResponseEntity.ok(dto);
+        return  ResponseEntity.ok(adress);
     }
 
     @DeleteMapping

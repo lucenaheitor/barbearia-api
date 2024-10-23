@@ -91,27 +91,22 @@ public class AgendaDeDeCorteCabelo {
 
     public DetalhamentoCorteDeCabelo atualizaStatus(Long id, StatusDto dto) {
 
-        Optional<Agenda> agenda= agendaRepository.findAgendaById(id);
+        Agenda agenda = agendaRepository.findAgendaById(id)
+                .orElseThrow(EntityNotFoundException::new);
 
-        if (agenda.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-
-        agenda.get().setStatus(dto.getStatus());
-        agendaRepository.updateStatus(dto.getStatus(), agenda.get());
+        agenda.setStatus(dto.getStatus());
+        agendaRepository.updateStatus(dto.getStatus(), agenda);
         return modelMapper.map(agenda, DetalhamentoCorteDeCabelo.class);
     }
 
     public void aprovaPagamentoPedido(Long id) {
 
-        Optional<Agenda> agenda = agendaRepository.findAgendaById(id);
+        Agenda agenda = agendaRepository.findAgendaById(id)
+                .orElseThrow(EntityNotFoundException::new);
 
-        if (agenda.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-
-        agenda.get().setStatus(Status.PAGO);
-        agendaRepository.updateStatus(Status.PAGO, agenda.get());
+        agenda.setStatus(Status.PAGO);
+        agendaRepository.updateStatus(Status.PAGO, agenda);
     }
+
 
 }

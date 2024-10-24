@@ -12,7 +12,7 @@ public class DetalhamentoCorteDeCabelo {
     private LocalDateTime date;
     private Status status;
 
-    public DetalhamentoCorteDeCabelo(Long id, Long idBarbeiro, String nomeBarbeiro, Long idCliente, String nomeCliente, LocalDateTime date, Status status) {
+    public DetalhamentoCorteDeCabelo() {
         this.id = id;
         this.idBarbeiro = idBarbeiro;
         this.nomeBarbeiro = nomeBarbeiro;
@@ -24,13 +24,8 @@ public class DetalhamentoCorteDeCabelo {
 
     // Construtor que recebe uma Agenda
     public DetalhamentoCorteDeCabelo(Agenda agenda) {
-        this(agenda.getId(),
-                agenda.getBarbeiro().getId(),
-                agenda.getBarbeiro().getNome(),
-                agenda.getCliente().getId(),
-                agenda.getCliente().getNome(),
-                agenda.getDate(),
-                agenda.getStatus());
+        this(
+        );
     }
 
     // Getters e Setters

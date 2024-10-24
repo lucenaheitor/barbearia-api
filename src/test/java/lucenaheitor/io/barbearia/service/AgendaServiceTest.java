@@ -3,7 +3,9 @@ package lucenaheitor.io.barbearia.service;
 import jakarta.validation.ValidationException;
 import lucenaheitor.io.barbearia.domain.agenda.*;
 import lucenaheitor.io.barbearia.domain.agenda.validacao_agenda.ValidacaoAgendamento;
+import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.BarbeiroRepository;
+import lucenaheitor.io.barbearia.domain.barbeiros.Especialidade;
 import lucenaheitor.io.barbearia.domain.clientes.Cliente;
 import lucenaheitor.io.barbearia.domain.clientes.ClienteRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +36,7 @@ public class AgendaServiceTest {
 
     @Mock
     private ModelMapper modelMapper;
+
 
     @Mock
     private List<ValidacaoAgendamento> validadores;
@@ -75,16 +79,44 @@ public class AgendaServiceTest {
 
     @Test
     public void agendarSucesso() {
-        when(clienteRespository.existsById(data.getIdCliente())).thenReturn(true);
-        when(barbeiroRespository.existsById(data.getIdBarbeiro())).thenReturn(true);
-        when(clienteRespository.getReferenceById(data.getIdCliente())).thenReturn(new Cliente());
-        when(modelMapper.map(data, Agenda.class)).thenReturn(new Agenda());
+        // Configuração dos dados de teste
+        Long idCliente = 1L;
+        Long idBarbeiro = 2L;
+        AgendamentoCorteDTO data = new AgendamentoCorteDTO(idCliente, idBarbeiro, LocalDateTime.now(), null, null);
 
+        Cliente clienteMock = new Cliente();
+        Barbeiro barbeiroMock = new Barbeiro();
+        Agenda agendaMock = new Agenda(
+                1L,
+                barbeiroMock,
+                clienteMock,
+                LocalDateTime.now(),
+                null,
+                Status.CONFIRMADO
+        );
+        DetalhamentoCorteDeCabelo detalhamentoMock = new DetalhamentoCorteDeCabelo(agendaMock);
+
+        // Configuração dos mocks
+        when(clienteRespository.existsById(idCliente)).thenReturn(true);
+        when(barbeiroRespository.existsById(idBarbeiro)).thenReturn(true);
+        when(clienteRespository.getReferenceById(idCliente)).thenReturn(clienteMock);
+        when(modelMapper.map(data, Agenda.class)).thenReturn(agendaMock);
+        when(agendaRepository.save(any(Agenda.class))).thenReturn(agendaMock);
         doNothing().when(validadores).forEach(any());
-        doNothing().when(agendaRepository).save(any());
+        when(modelMapper.map(agendaMock, DetalhamentoCorteDeCabelo.class)).thenReturn(detalhamentoMock);
 
+        // Execução do método a ser testado
         DetalhamentoCorteDeCabelo detalhamento = agendaService.agendar(data);
 
-        assertNotNull(detalhamento);
+        // Verificações
+        assertNotNull(detalhamento); // Verifica se o detalhamento retornado não é nulo
+        verify(clienteRespository, times(1)).existsById(idCliente); // Verifica se o método existsById foi chamado
+        verify(barbeiroRespository, times(1)).existsById(idBarbeiro); // Verifica se o barbeiro foi verificado
+        verify(clienteRespository, times(1)).getReferenceById(idCliente); // Verifica se o cliente foi buscado
+        verify(modelMapper, times(1)).map(data, Agenda.class); // Verifica se o mapeamento foi feito corretamente
+        verify(validadores, times(1)).forEach(any()); // Verifica se os validadores foram executados
+        verify(agendaRepository, times(1)).save(agendaMock); // Verifica se a agenda foi salva corretamente
     }
+    }
+
 }

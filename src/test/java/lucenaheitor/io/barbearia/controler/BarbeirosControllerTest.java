@@ -51,4 +51,6 @@ class BarbeirosControllerTest {
         mockMvc.perform(delete("/barbeiros/1"))
                 .andExpect(status().isNoContent());
     }
+
+    
 }

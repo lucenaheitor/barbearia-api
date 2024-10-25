@@ -73,7 +73,7 @@ public class AgendaDeDeCorteCabelo {
             return  barbeiroRespository.getReferenceById(data.getIdBarbeiro());
         }
         if (data.getEspecialidade() == null){
-            throw  new ValidationExeception("Esdpecialidade obrigatoria");
+            throw  new ValidationExeception("Especialidade obrigatoria");
         }
         return  barbeiroRespository.escolherBarbeiroAleatorio(data.getEspecialidade(), data.getDate());
     }

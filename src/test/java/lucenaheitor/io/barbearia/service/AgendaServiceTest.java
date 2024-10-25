@@ -117,6 +117,4 @@ public class AgendaServiceTest {
         verify(validadores, times(1)).forEach(any()); // Verifica se os validadores foram executados
         verify(agendaRepository, times(1)).save(agendaMock); // Verifica se a agenda foi salva corretamente
     }
-    }
-
 }

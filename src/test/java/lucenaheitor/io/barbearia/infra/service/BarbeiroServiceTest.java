@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static lucenaheitor.io.barbearia.domain.barbeiros.Especialidade.CORTE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -43,15 +44,14 @@ class BarbeiroServiceTest {
     private ListagemBarbeirosDTO listagemBarbeirosDTO;
     private DetailsBarbeiros detailsBarbeiros;
     private Barbeiro barbeiro;
+    private Especialidade especialidade;
 
     @BeforeEach
-    void setUp() {
-        cadastroBarbeiroDTO = new CadastroBarbeiroDTO();
-        atualizationoBarbeirosDTO = new AtualizationoBarbeirosDTO();
-        listagemBarbeirosDTO = new ListagemBarbeirosDTO();
-        detailsBarbeiros = new DetailsBarbeiros();
-        barbeiro = new Barbeiro();
-    }
+    void setUp() { cadastroBarbeiroDTO = new CadastroBarbeiroDTO("João", "joao@example.com", "123.456.789-00", "1234567890", Especialidade.CORTE_BARBA);
+        atualizationoBarbeirosDTO = new AtualizationoBarbeirosDTO(1L, "teste2", "teste@teste.com", "(11)1234567890");
+        listagemBarbeirosDTO = new ListagemBarbeirosDTO(1L, "teste 123", Especialidade.CORTE_BARBA );
+        detailsBarbeiros = new DetailsBarbeiros(1L, "João", "joao@example.com", "123.456.789-00", "(11)123456789", Especialidade.CORTE_BARBA);
+        barbeiro = new Barbeiro(); }
 
     @Test
     void register() {

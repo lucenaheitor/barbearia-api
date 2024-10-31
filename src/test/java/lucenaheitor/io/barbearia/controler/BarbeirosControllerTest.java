@@ -13,10 +13,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,9 +45,6 @@ class BarbeirosControllerTest {
                 .andExpect(status().isOk());
     }
 
- 
-
-
     @Test
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     public void testDeletar() throws Exception {
@@ -52,5 +52,21 @@ class BarbeirosControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    public void  testListar() throws Exception {
+        List<Barbeiro> barbeiros = new ArrayList<>();
+
+        mockMvc.perform(get("/barbeiros"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    public void testDelete() throws Exception {
+        mockMvc.perform(delete("/barbeiros/1"))
+                .andExpect(status().isNoContent());
+    }
+
 }

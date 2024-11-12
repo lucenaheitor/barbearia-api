@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @AutoConfigureMockMvc(addFilters = false) // Desativa os filtros de segurança
@@ -95,13 +98,14 @@ class BarbeirosControllerTest {
                 .andReturn().getResponse();
         Assertions.assertEquals(200, mvcResult.getStatus());
     }
-//
-//    @Test
-//    @WithMockUser(username = "testuser", roles = {"ADMIN"})
-//    void delete() throws Exception {
-//        doNothing().when(service).delete(anyLong());
-//
-//        mockMvc.perform(delete())
-//                .andExpect(status().isNoContent());
-//    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    void delete() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/barbeiros/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isNoContent());
+
+    }
 }

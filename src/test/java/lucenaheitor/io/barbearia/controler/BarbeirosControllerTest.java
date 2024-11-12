@@ -25,8 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @AutoConfigureMockMvc(addFilters = false) // Desativa os filtros de segurança
@@ -55,7 +54,11 @@ class BarbeirosControllerTest {
                 .thenReturn(dto);
        var  response =  mockMvc.perform(post("/barbeiros")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nome\":\"Test\", \"email\":\"test@example.com\", \"cpf\":\"123.456.789-00\", \"telefone\":\"1234567890\", \"especialidade\":\"CORTE\"}"))
+                .content("{\"nome\":\"Test\", " +
+                        "\"email\":\"test@example.com\", " +
+                        "\"cpf\":\"123.456.789-00\", " +
+                        "\"telefone\":\"1234567890\"," +
+                        " \"especialidade\":\"CORTE\"}"))
                         .andReturn().getResponse();
 
                 Assertions.assertEquals(201, response.getStatus());
@@ -76,27 +79,22 @@ class BarbeirosControllerTest {
         Assertions.assertEquals(200, response.getStatus() );
     }
 
-//    @Test
-//    @WithMockUser(username = "testuser", roles = {"ADMIN"})
-//    void detail() throws Exception {
-//        Barbeiro barbeiro = new Barbeiro();
-//        when(service.datails(anyLong())).thenReturn(barbeiro);
-//
-//        mockMvc.perform(get("/barbeiros/1"))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    @WithMockUser(username = "testuser", roles = {"ADMIN"})
-//    void update() throws Exception {
-//        Barbeiro barbeiro = new Barbeiro();
-//        when(service.update(any())).thenReturn(barbeiro);
-//
-//        mockMvc.perform(put("/barbeiros")
-//                        .contentType("application/json")
-//                        .content("{\"nome\":\"Test\", \"email\":\"test@example.com\", \"cpf\":\"123.456.789-00\", \"telefone\":\"1234567890\", \"especialidade\":\"CORTE\"}"))
-//                .andExpect(status().isOk());
-//    }
+
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    void update() throws Exception {
+        DetailsBarbeiros details = new DetailsBarbeiros( 1L,
+                "Test",
+                "test@example.com",
+                "123.456.789-00",
+                "1234567890",
+                Especialidade.BARBA);
+        when(service.datails(anyLong())).thenReturn(details);
+        var  mvcResult = mockMvc.perform(get("/barbeiros/1"))
+                .andReturn().getResponse();
+        Assertions.assertEquals(200, mvcResult.getStatus());
+    }
 //
 //    @Test
 //    @WithMockUser(username = "testuser", roles = {"ADMIN"})

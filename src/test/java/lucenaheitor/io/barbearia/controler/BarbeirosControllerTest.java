@@ -1,9 +1,6 @@
 package lucenaheitor.io.barbearia.controler;
 
-import lucenaheitor.io.barbearia.domain.barbeiros.Barbeiro;
-import lucenaheitor.io.barbearia.domain.barbeiros.BarbeiroRepository;
-import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
-import lucenaheitor.io.barbearia.domain.barbeiros.Especialidade;
+import lucenaheitor.io.barbearia.domain.barbeiros.*;
 import lucenaheitor.io.barbearia.infra.service.BarbeiroService;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
@@ -59,18 +61,20 @@ class BarbeirosControllerTest {
                 Assertions.assertEquals(201, response.getStatus());
         }
 
-//    @Test
-//    @WithMockUser(username = "testuser", roles = {"ADMIN"})
-//    void list() throws Exception {
-//        List<Barbeiro> barbeiros = new ArrayList<>();
-//        barbeiros.add(new Barbeiro());
-//        when(service.getBarbeiro(any())).thenReturn(barbeiros);
-//
-//        mockMvc.perform(get("/barbeiros")
-//                        .param("page", "0")
-//                        .param("size", "5"))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    void list() throws Exception {
+         List<ListagemBarbeirosDTO> barbeiros = new ArrayList<>();
+            barbeiros.add(new ListagemBarbeirosDTO(1L, "Test", Especialidade.CORTE_BARBA));
+          Page<ListagemBarbeirosDTO> page = new PageImpl<>(barbeiros, PageRequest.of(0, 5), barbeiros.size());
+          when(service.getBarbeiro(any())).thenReturn(page);
+         var response =  mockMvc.perform(get("/barbeiros")
+                 .param("page", "0")
+                         .param("size", "5"))
+                         .andReturn().getResponse();
+
+        Assertions.assertEquals(200, response.getStatus() );
+    }
 
 //    @Test
 //    @WithMockUser(username = "testuser", roles = {"ADMIN"})

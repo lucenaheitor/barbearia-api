@@ -39,9 +39,6 @@ class BarbeirosControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BarbeiroRepository barbeiroRepository;
-
-    @MockBean
     private BarbeiroService service;
 
      @Test

@@ -80,6 +80,21 @@ class BarbeirosControllerTest {
         Assertions.assertEquals(200, response.getStatus() );
     }
 
+    @Test @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    void testDetail() throws Exception {
+         DetailsBarbeiros detailsDto = new DetailsBarbeiros(
+                 1L,
+                 "Test Barbeiro",
+                 "test@example.com",
+                 "123.456.789-00",
+                 "(00) 12345-789",
+                 Especialidade.CORTE_BARBA
+                 );
+         when(service.datails(anyLong())).thenReturn(detailsDto);
+         var mvcResult = mockMvc.perform(get("/barbeiros/1"))
+                 .andReturn().getResponse();
+         Assertions.assertEquals(200, mvcResult.getStatus()); }
+
 
 
     @Test

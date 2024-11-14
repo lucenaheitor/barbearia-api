@@ -4,6 +4,7 @@ import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
 import lucenaheitor.io.barbearia.domain.barbeiros.Especialidade;
 import lucenaheitor.io.barbearia.domain.barbeiros.ListagemBarbeirosDTO;
 import lucenaheitor.io.barbearia.domain.clientes.CadastroClienteDTO;
+import lucenaheitor.io.barbearia.domain.clientes.DetailsClientesDTO;
 import lucenaheitor.io.barbearia.domain.clientes.ListagemClientesDTO;
 import lucenaheitor.io.barbearia.infra.service.ClienteService;
 import org.junit.jupiter.api.Assertions;
@@ -71,9 +72,14 @@ class ClientecontrollerTest {
         Assertions.assertEquals(200, response.getStatus());
     }
 
-    @Test
-    void detail() {
-    }
+    //@Test
+//    void detail() {
+//        DetailsClientesDTO detail = new DetailsClientesDTO(
+//                1l,
+//                "test",
+//                "test@test.com"
+//        );
+//    }
 
     @Test
     void update() {

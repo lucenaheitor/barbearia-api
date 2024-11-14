@@ -1,6 +1,7 @@
 package lucenaheitor.io.barbearia.controler;
 
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
+import lucenaheitor.io.barbearia.domain.clientes.AtualizationClientesDTO;
 import lucenaheitor.io.barbearia.infra.service.BarbeiroService;
 
 import org.junit.jupiter.api.Assertions;
@@ -84,14 +85,19 @@ class BarbeirosControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     void update() throws Exception {
-        DetailsBarbeiros details = new DetailsBarbeiros( 1L,
+        AtualizationoBarbeirosDTO updateDto = new AtualizationoBarbeirosDTO(
+                1L,
                 "Test",
                 "test@example.com",
-                "123.456.789-00",
-                "1234567890",
-                Especialidade.BARBA);
-        when(service.datails(anyLong())).thenReturn(details);
-        var  mvcResult = mockMvc.perform(get("/barbeiros/1"))
+                "(00) 12345-6789");
+        when(service.update(any(AtualizationoBarbeirosDTO.class))).thenReturn(updateDto);
+        String jsonContent = "{ \"id\": 1," +
+                " \"name\": \"Test\", " +
+                "\"email\": \"test2@example.com\", " +
+                "\"telefone\": \"(12) 12345-6789\" }";
+        var mvcResult = mockMvc.perform(put("/barbeiros")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonContent))
                 .andReturn().getResponse();
         Assertions.assertEquals(200, mvcResult.getStatus());
     }

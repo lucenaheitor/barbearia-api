@@ -69,9 +69,10 @@ class BarbeirosControllerTest {
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     void list() throws Exception {
          List<ListagemBarbeirosDTO> barbeiros = new ArrayList<>();
-            barbeiros.add(new ListagemBarbeirosDTO(1L, "Test", Especialidade.CORTE_BARBA));
-          Page<ListagemBarbeirosDTO> page = new PageImpl<>(barbeiros, PageRequest.of(0, 5), barbeiros.size());
-          when(service.getBarbeiro(any())).thenReturn(page);
+         barbeiros.add(new ListagemBarbeirosDTO(1L, "Test", Especialidade.CORTE_BARBA));
+
+         Page<ListagemBarbeirosDTO> page = new PageImpl<>(barbeiros, PageRequest.of(0, 5), barbeiros.size());
+         when(service.getBarbeiro(any())).thenReturn(page);
          var response =  mockMvc.perform(get("/barbeiros")
                  .param("page", "0")
                          .param("size", "5"))

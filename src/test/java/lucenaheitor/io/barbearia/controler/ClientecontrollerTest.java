@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,21 +66,31 @@ class ClientecontrollerTest {
     void list() throws Exception {
         ListagemClientesDTO cliente = new ListagemClientesDTO(1L, "Test", "test@test.com", "123.456.789-00", "(12) 12345-6789");
         Page<ListagemClientesDTO> page = new PageImpl<>(Collections.singletonList(cliente), PageRequest.of(0, 5), 1);
+
         when(clienteService.getClient(any())).thenReturn(page);
+
         var response = mockMvc.perform(get("/clientes")
                 .param("page", "0") .param("size", "5"))
                 .andReturn().getResponse();
         Assertions.assertEquals(200, response.getStatus());
     }
 
-    //@Test
-//    void detail() {
-//        DetailsClientesDTO detail = new DetailsClientesDTO(
-//                1l,
-//                "test",
-//                "test@test.com"
-//        );
-//    }
+    @Test
+    void detail() throws Exception {
+        DetailsClientesDTO detail = new DetailsClientesDTO(
+                1l,
+                "test",
+                "test@test.com",
+                "123.456.789-00",
+                "(12) 12345-6789"
+        );
+        when(clienteService.detailClient(anyLong())).thenReturn(detail);
+
+        var response = mockMvc.perform(get("/clientes/1"))
+                .andReturn().getResponse();
+
+        Assertions.assertEquals(200, response.getStatus());
+    }
 
     @Test
     void update() {

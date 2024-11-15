@@ -120,10 +120,10 @@ class BarbeirosControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     void delete() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/barbeiros/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNoContent());
-
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .delete("/barbeiros/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        Assertions.assertEquals(204, mvcResult.getStatus());
     }
 }

@@ -106,7 +106,7 @@ class BarbeirosControllerTest {
                 "Test",
                 "test@example.com",
                 "(00) 12345-6789");
-        when(service.update(any(AtualizationoBarbeirosDTO.class))).thenReturn(updateDto);
+        when(service.update(any())).thenReturn(updateDto);
         String jsonContent = "{ \"id\": 1," +
                 " \"name\": \"Test\", " +
                 "\"email\": \"test2@example.com\", " +

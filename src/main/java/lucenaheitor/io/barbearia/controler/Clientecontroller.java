@@ -48,9 +48,8 @@ public class Clientecontroller {
     @PutMapping
     @Transactional
     public ResponseEntity update(@RequestBody @Valid AtualizationClientesDTO data){
-        var barbeiro = repository.getReferenceById(data.id());
-        barbeiro.updateInfo(data);
-        return  ResponseEntity.ok( new DetailsClientesDTO(barbeiro));
+        AtualizationClientesDTO  clientesDTO = service.updateClient(data);
+        return ResponseEntity.ok(clientesDTO);
     }
 
     @DeleteMapping("/{id}")

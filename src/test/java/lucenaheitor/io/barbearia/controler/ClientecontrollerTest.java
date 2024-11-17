@@ -1,8 +1,7 @@
 package lucenaheitor.io.barbearia.controler;
 
-import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
-import lucenaheitor.io.barbearia.domain.barbeiros.Especialidade;
-import lucenaheitor.io.barbearia.domain.barbeiros.ListagemBarbeirosDTO;
+
+import lucenaheitor.io.barbearia.domain.clientes.AtualizationClientesDTO;
 import lucenaheitor.io.barbearia.domain.clientes.CadastroClienteDTO;
 import lucenaheitor.io.barbearia.domain.clientes.DetailsClientesDTO;
 import lucenaheitor.io.barbearia.domain.clientes.ListagemClientesDTO;
@@ -18,17 +17,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @AutoConfigureMockMvc(addFilters = false) // Desativa os filtros de segurança
 @SpringBootTest
@@ -37,8 +37,8 @@ class ClientecontrollerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private ClienteService clienteService;
+   @MockBean
+   private ClienteService clienteService;
 
     @Test
     void register() throws Exception {
@@ -93,10 +93,30 @@ class ClientecontrollerTest {
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
+        AtualizationClientesDTO dto  = new AtualizationClientesDTO(
+                1L,
+                "test",
+                "test@test.com",
+                "(00) 12345-6789" );
+        when(clienteService.updateClient(any())).thenReturn(dto);
+        String jsonContent = "{ \"id\": 1,"
+                + " \"name\": \"Test\", "
+                + "\"email\": \"test2@example.com\", "
+                + "\"telefone\": \"(12) 12345-6789\" }";
+        var mvcResult = mockMvc.perform(put("/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonContent))
+                .andReturn().getResponse();
+        Assertions.assertEquals(200, mvcResult.getStatus());
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/clientes/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        Assertions.assertEquals(204, mvcResult.getStatus());
     }
 }

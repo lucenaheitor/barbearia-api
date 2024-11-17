@@ -48,14 +48,15 @@ public class ClienteService {
         return modelmapper.map(cliente, DetailsClientesDTO.class);
     }
 
-    public AtualizationoBarbeirosDTO updateClient(AtualizationoBarbeirosDTO dto){
+    public AtualizationClientesDTO updateClient(AtualizationClientesDTO dto){
         Cliente cliente  = modelmapper.map(dto, Cliente.class);
         clienteRepository.getReferenceById(cliente.getId());
         clienteRepository.save(cliente);
-        return  modelmapper.map(cliente, AtualizationoBarbeirosDTO.class);
+        return  modelmapper.map(cliente, AtualizationClientesDTO.class);
     }
 
     public void  deleteClient(Long id){
+
         clienteRepository.deleteById(id);
     }
 }

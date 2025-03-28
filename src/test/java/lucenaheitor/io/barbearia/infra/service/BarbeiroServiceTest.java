@@ -14,12 +14,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static lucenaheitor.io.barbearia.domain.barbeiros.Especialidade.CORTE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -38,20 +36,20 @@ class BarbeiroServiceTest {
     @InjectMocks
     private BarbeiroService barbeiroService;
 
-
     private CadastroBarbeiroDTO cadastroBarbeiroDTO;
     private AtualizationoBarbeirosDTO atualizationoBarbeirosDTO;
     private ListagemBarbeirosDTO listagemBarbeirosDTO;
     private DetailsBarbeiros detailsBarbeiros;
     private Barbeiro barbeiro;
-    private Especialidade especialidade;
 
     @BeforeEach
-    void setUp() { cadastroBarbeiroDTO = new CadastroBarbeiroDTO("João", "joao@example.com", "123.456.789-00", "1234567890", Especialidade.CORTE_BARBA);
+    void setUp() {
+        cadastroBarbeiroDTO = new CadastroBarbeiroDTO("João", "joao@example.com", "123.456.789-00", "1234567890", Especialidade.CORTE_BARBA);
         atualizationoBarbeirosDTO = new AtualizationoBarbeirosDTO(1L, "teste2", "teste@teste.com", "(11)1234567890");
         listagemBarbeirosDTO = new ListagemBarbeirosDTO(1L, "teste 123", Especialidade.CORTE_BARBA );
         detailsBarbeiros = new DetailsBarbeiros(1L, "João", "joao@example.com", "123.456.789-00", "(11)123456789", Especialidade.CORTE_BARBA);
-        barbeiro = new Barbeiro(); }
+        barbeiro = new Barbeiro();
+    }
 
     @Test
     void register() {
@@ -83,7 +81,7 @@ class BarbeiroServiceTest {
     }
 
     @Test
-    void datails() {
+    void details() {
         when(barbeiroRepository.findById(anyLong())).thenReturn(Optional.of(barbeiro));
         when(modelMapper.map(any(Barbeiro.class), eq(DetailsBarbeiros.class))).thenReturn(detailsBarbeiros);
 
@@ -96,18 +94,36 @@ class BarbeiroServiceTest {
 
     @Test
     void update() {
-        when(modelMapper.map(any(AtualizationoBarbeirosDTO.class), eq(Barbeiro.class))).thenReturn(barbeiro);
-        when(barbeiroRepository.getReferenceById(anyLong())).thenReturn(barbeiro);
-        when(barbeiroRepository.save(any(Barbeiro.class))).thenReturn(barbeiro);
-        when(modelMapper.map(any(Barbeiro.class), eq(AtualizationoBarbeirosDTO.class))).thenReturn(atualizationoBarbeirosDTO);
+        // Configurar o objeto barbeiro com dados esperados
+        barbeiro.setId(atualizationoBarbeirosDTO.id());
+        barbeiro.setNome(atualizationoBarbeirosDTO.nome());
+        barbeiro.setEmail(atualizationoBarbeirosDTO.email());
+        barbeiro.setTelefone(atualizationoBarbeirosDTO.telefone());
+        barbeiro.setEspecialidade(Especialidade.CORTE); // Se necessário, ajuste esse campo
 
+        // Mock do ModelMapper para mapear DTO -> Entidade
+        when(modelMapper.map(any(AtualizationoBarbeirosDTO.class), eq(Barbeiro.class))).thenReturn(barbeiro);
+
+        // Mock do repositório para simular a busca pelo barbeiro no banco de dados
+        when(barbeiroRepository.getReferenceById(anyLong())).thenReturn(barbeiro);
+
+        // Mock do repositório para salvar e retornar o barbeiro atualizado
+        when(barbeiroRepository.save(any(Barbeiro.class))).thenReturn(barbeiro);
+
+        // Mock do ModelMapper para mapear a entidade de volta para DTO
+        when(modelMapper.map(any(Barbeiro.class), eq(AtualizationoBarbeirosDTO.class)))
+                .thenReturn(atualizationoBarbeirosDTO);
+
+        // Chamar o método de update do service
         AtualizationoBarbeirosDTO result = barbeiroService.update(atualizationoBarbeirosDTO);
 
-        assertNotNull(result);
-        verify(barbeiroRepository, times(1)).getReferenceById(anyLong());
+        // Verificações
+        assertEquals(atualizationoBarbeirosDTO.nome(), result.nome());
+        assertEquals(atualizationoBarbeirosDTO.email(), result.email());
+        assertEquals(atualizationoBarbeirosDTO.telefone(), result.telefone());
+
+        verify(barbeiroRepository, times(1)).getReferenceById(atualizationoBarbeirosDTO.id());
         verify(barbeiroRepository, times(1)).save(any(Barbeiro.class));
-        verify(modelMapper, times(1)).map(any(AtualizationoBarbeirosDTO.class), eq(Barbeiro.class));
-        verify(modelMapper, times(1)).map(any(Barbeiro.class), eq(AtualizationoBarbeirosDTO.class));
     }
 
     @Test

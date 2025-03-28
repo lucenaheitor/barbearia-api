@@ -30,7 +30,7 @@ public class ClienteService {
 
     public CadastroClienteDTO createCliente(CadastroClienteDTO dto) {
         Cliente cliente = modelmapper.map(dto, Cliente.class);
-        validadores.forEach(v -> v.validar(dto));
+        //validadores.forEach(v -> v.validar(dto));
         clienteRepository.save(cliente);
 
         return modelmapper.map(cliente, CadastroClienteDTO.class);
@@ -49,8 +49,8 @@ public class ClienteService {
     }
 
     public AtualizationClientesDTO updateClient(AtualizationClientesDTO dto){
+        clienteRepository.getReferenceById(dto.id());
         Cliente cliente  = modelmapper.map(dto, Cliente.class);
-        clienteRepository.getReferenceById(cliente.getId());
         clienteRepository.save(cliente);
         return  modelmapper.map(cliente, AtualizationClientesDTO.class);
     }

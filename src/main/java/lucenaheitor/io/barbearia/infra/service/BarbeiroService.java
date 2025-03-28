@@ -51,6 +51,7 @@ public class BarbeiroService {
     }
 
     public  void delete(Long id){
+
         barbeiroRepository.deleteById(id);
     }
 

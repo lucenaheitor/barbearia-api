@@ -94,30 +94,23 @@ class BarbeiroServiceTest {
 
     @Test
     void update() {
-        // Configurar o objeto barbeiro com dados esperados
         barbeiro.setId(atualizationoBarbeirosDTO.id());
         barbeiro.setNome(atualizationoBarbeirosDTO.nome());
         barbeiro.setEmail(atualizationoBarbeirosDTO.email());
         barbeiro.setTelefone(atualizationoBarbeirosDTO.telefone());
-        barbeiro.setEspecialidade(Especialidade.CORTE); // Se necessário, ajuste esse campo
+        barbeiro.setEspecialidade(Especialidade.CORTE);
 
-        // Mock do ModelMapper para mapear DTO -> Entidade
         when(modelMapper.map(any(AtualizationoBarbeirosDTO.class), eq(Barbeiro.class))).thenReturn(barbeiro);
 
-        // Mock do repositório para simular a busca pelo barbeiro no banco de dados
         when(barbeiroRepository.getReferenceById(anyLong())).thenReturn(barbeiro);
 
-        // Mock do repositório para salvar e retornar o barbeiro atualizado
         when(barbeiroRepository.save(any(Barbeiro.class))).thenReturn(barbeiro);
 
-        // Mock do ModelMapper para mapear a entidade de volta para DTO
         when(modelMapper.map(any(Barbeiro.class), eq(AtualizationoBarbeirosDTO.class)))
                 .thenReturn(atualizationoBarbeirosDTO);
 
-        // Chamar o método de update do service
         AtualizationoBarbeirosDTO result = barbeiroService.update(atualizationoBarbeirosDTO);
 
-        // Verificações
         assertEquals(atualizationoBarbeirosDTO.nome(), result.nome());
         assertEquals(atualizationoBarbeirosDTO.email(), result.email());
         assertEquals(atualizationoBarbeirosDTO.telefone(), result.telefone());

@@ -1,16 +1,15 @@
 package lucenaheitor.io.barbearia.infra.service;
 
 import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
-import lucenaheitor.io.barbearia.domain.clientes.AtualizationClientesDTO;
-import lucenaheitor.io.barbearia.domain.clientes.CadastroClienteDTO;
-import lucenaheitor.io.barbearia.domain.clientes.Cliente;
-import lucenaheitor.io.barbearia.domain.clientes.ClienteRepository;
+import lucenaheitor.io.barbearia.domain.clientes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,6 +33,7 @@ class ClienteServiceTest {
 
     private CadastroClienteDTO cadastroClienteDTO;
     private AtualizationClientesDTO atualizationClientesDTO;
+    private DetailsClientesDTO detailsClientesDTO;
 
 
     @BeforeEach
@@ -42,6 +42,7 @@ class ClienteServiceTest {
         cliente = new Cliente(1l, "test", "test@test.com", "123.456.789", "(11)12345-6789");
         cadastroClienteDTO = new CadastroClienteDTO("test", "test@test.com", "123.456.789", "(11)12345-6789");
         atualizationClientesDTO = new AtualizationClientesDTO(1L,"test","test@test.com","(11)12345-6789");
+
 
 
     }
@@ -63,10 +64,19 @@ class ClienteServiceTest {
 
     @Test
     void getClient() {
+
     }
 
     @Test
     void detailClient() {
+        when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
+        when(modelMapper.map(any(DetailsClientesDTO.class), eq(Cliente.class))).thenReturn(cliente);
+
+        clienteService.detailClient(anyLong());
+
+        verify(clienteRepository).findById(anyLong());
+        verify(modelMapper).map(any(Cliente.class), eq(DetailsClientesDTO.class));
+
     }
 
     @Test

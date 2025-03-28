@@ -90,5 +90,10 @@ class ClienteServiceTest {
 
     @Test
     void deleteClient() {
+        doNothing().when(clienteRepository).deleteById(anyLong());
+
+        clienteService.deleteClient(1l);
+
+        verify(clienteRepository).deleteById(anyLong());
     }
 }

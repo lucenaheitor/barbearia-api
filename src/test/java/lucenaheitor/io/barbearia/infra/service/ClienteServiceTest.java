@@ -1,6 +1,5 @@
 package lucenaheitor.io.barbearia.infra.service;
 
-import lucenaheitor.io.barbearia.domain.barbeiros.CadastroBarbeiroDTO;
 import lucenaheitor.io.barbearia.domain.clientes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,8 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -38,13 +38,11 @@ class ClienteServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         cliente = new Cliente(1l, "test", "test@test.com", "123.456.789", "(11)12345-6789");
         cadastroClienteDTO = new CadastroClienteDTO("test", "test@test.com", "123.456.789", "(11)12345-6789");
         atualizationClientesDTO = new AtualizationClientesDTO(1L,"test","test@test.com","(11)12345-6789");
-
-
-
+        detailsClientesDTO = new DetailsClientesDTO(1L, "test","test@testmail.com","123.456.789-00","(11)12345-67890");
     }
 
     @Test
@@ -78,7 +76,6 @@ class ClienteServiceTest {
         verify(modelMapper).map(any(Cliente.class), eq(DetailsClientesDTO.class));
 
     }
-
     @Test
     void updateClient() {
         when(modelMapper.map(any(AtualizationClientesDTO.class), eq(Cliente.class))).thenReturn(cliente);
@@ -95,6 +92,19 @@ class ClienteServiceTest {
          verify(clienteRepository).getReferenceById(anyLong());
          verify(clienteRepository).save(any(Cliente.class));
          verify(modelMapper).map(any(Cliente.class), eq(AtualizationClientesDTO.class));
+
+    }
+
+    @Test
+    void clientService_DetailClient() {
+
+        when(clienteRepository.findById(anyLong())).thenReturn(Optional.of(cliente));
+        when(modelMapper.map(any(), any())).thenReturn(detailsClientesDTO);
+
+        clienteService.detailClient(anyLong());
+
+        assertEquals(detailsClientesDTO, clienteService.detailClient(anyLong()));
+        verify(clienteRepository, times(2)).findById(anyLong());
 
     }
 

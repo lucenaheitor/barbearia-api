@@ -1,12 +1,12 @@
 package lucenaheitor.io.barbearia.infra.service;
 
-import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -15,10 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,11 +27,9 @@ class BarbeiroServiceTest {
     @Mock
     private BarbeiroRepository barbeiroRepository;
 
-    @Mock
+    @Spy
     private ModelMapper modelMapper;
 
-    @Mock
-    private List<ValidationBarbeiro> validadores;
 
     @InjectMocks
     private BarbeiroService barbeiroService;

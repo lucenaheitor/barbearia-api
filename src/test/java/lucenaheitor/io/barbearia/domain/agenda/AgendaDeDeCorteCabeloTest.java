@@ -15,11 +15,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import jakarta.validation.ValidationException;
+
+import javax.annotation.meta.When;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,10 +47,10 @@ public class AgendaDeDeCorteCabeloTest {
     private AgendaRepository agendaRepository;
 
     @Mock
-    private List<ValidacaoAgendamento> validadores;
+    private Barbeiro barbeiro;
 
     @Mock
-    private List<CancelamentoAgenda> cancelamentoValidacao;
+    private Cliente cliente;
 
     @InjectMocks
     private AgendaDeDeCorteCabelo agendaService;
@@ -56,8 +60,9 @@ public class AgendaDeDeCorteCabeloTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         agendamentoCorteDTO = new AgendamentoCorteDTO(1L, 1L, LocalDateTime.now().plusDays(1), null, Status.CONFIRMADO);
-        agendaMock = new Agenda(1L, new Barbeiro(), new Cliente(), LocalDateTime.now(), null, Status.CONFIRMADO);
+        agendaMock = new Agenda(1L, new Barbeiro(), new Cliente(), LocalDateTime.now(), null , Status.REALIZADO);
     }
 
     @Test
@@ -103,41 +108,69 @@ public class AgendaDeDeCorteCabeloTest {
 
     @Test
     public void testCancelarAgendamento() {
-        CancelamentoDTO cancelamentoDTO = new CancelamentoDTO(1L, Cancelamento.BARBEIRO_CANCELOU);
+        // Criando um DTO com ID válido
+        CancelamentoDTO dto = new CancelamentoDTO(1L, Cancelamento.BARBEIRO_CANCELOU);
 
-        when(agendaRepository.existsById(anyLong())).thenReturn(true);
-        when(agendaRepository.getReferenceById(anyLong())).thenReturn(agendaMock);
+        // Criando uma agenda simulada
+        Agenda agenda = mock(Agenda.class);
 
-        agendaService.cancelar(cancelamentoDTO);
+        // Configuração dos mocks
+        when(agendaRepository.existsById(dto.idAgenda())).thenReturn(true);
+        when(agendaRepository.getReferenceById(dto.idAgenda())).thenReturn(agenda);
 
-        verify(agendaRepository, times(1)).existsById(anyLong());
-        verify(agendaRepository, times(1)).getReferenceById(anyLong());
-        verify(agendaRepository, times(1)).save(any(Agenda.class));
+        // Chamando o método de serviço
+        agendaService.cancelar(dto);
+
+        // Verificando se os métodos foram chamados corretamente
+        verify(agendaRepository).existsById(dto.idAgenda());
+        verify(agendaRepository).getReferenceById(dto.idAgenda());
+        verify(agenda).cancelar(dto.cancelamento());
     }
 
     @Test
-    public void testAtualizaStatus() {
-        StatusDto statusDto = new StatusDto(Status.PAGO);
+    void deveAtualizarStatusComSucesso() {
+        // Arrange
+        Long id = 1L;
+        StatusDto dto = new StatusDto();
+        dto.setStatus(Status.REALIZADO);
 
-        when(agendaRepository.findAgendaById(anyLong())).thenReturn(Optional.of(agendaMock));
-        when(agendaRepository.save(any(Agenda.class))).thenReturn(agendaMock);
+        DetalhamentoCorteDeCabelo detalheMock = new DetalhamentoCorteDeCabelo();
 
-        DetalhamentoCorteDeCabelo result = agendaService.atualizaStatus(1L, statusDto);
+        when(agendaRepository.findAgendaById(id)).thenReturn(Optional.of(agendaMock));
+        when(modelMapper.map(any(Agenda.class), eq(DetalhamentoCorteDeCabelo.class)))
+                .thenReturn(detalheMock);
 
-        assertNotNull(result);
-        assertEquals(Status.PAGO, agendaMock.getStatus());
-        verify(agendaRepository, times(1)).findAgendaById(anyLong());
-        verify(agendaRepository, times(1)).save(any(Agenda.class));
+        // Simulamos a atualização do status no repositório
+        doAnswer(invocation -> {
+            agendaMock.setStatus(dto.getStatus());
+            return null;
+        }).when(agendaRepository).updateStatus(dto.getStatus(), agendaMock);
+
+        // Act
+        DetalhamentoCorteDeCabelo resultado = agendaService.atualizaStatus(id, dto);
+
+        // Assert
+        assertEquals(Status.REALIZADO, agendaMock.getStatus());
+        assertEquals(detalheMock, resultado);
+
+        verify(agendaRepository).findAgendaById(id);
+        verify(agendaRepository).updateStatus(dto.getStatus(), agendaMock);
+        verify(modelMapper).map(agendaMock, DetalhamentoCorteDeCabelo.class);
     }
 
     @Test
     public void testAprovaPagamentoPedido() {
-        when(agendaRepository.findAgendaById(anyLong())).thenReturn(Optional.of(agendaMock));
+        // Arrange
+        Long id = 1L;
 
-        agendaService.aprovaPagamentoPedido(1L);
+        when(agendaRepository.findAgendaById(id)).thenReturn(Optional.of(agendaMock));
 
+        // Act
+        agendaService.aprovaPagamentoPedido(id);
+
+        // Assert
         assertEquals(Status.PAGO, agendaMock.getStatus());
-        verify(agendaRepository, times(1)).findAgendaById(anyLong());
-        verify(agendaRepository, times(1)).save(any(Agenda.class));
+        verify(agendaRepository).findAgendaById(id);
+        verify(agendaRepository).updateStatus(Status.PAGO, agendaMock);
     }
 }

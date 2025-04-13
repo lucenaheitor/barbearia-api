@@ -24,8 +24,7 @@ public class DetalhamentoCorteDeCabelo {
 
     // Construtor que recebe uma Agenda
     public DetalhamentoCorteDeCabelo(Agenda agenda) {
-        this(
-        );
+        this();
     }
 
     // Getters e Setters

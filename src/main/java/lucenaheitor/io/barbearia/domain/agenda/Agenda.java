@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Entity(name = "Agenda")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Agenda {
 

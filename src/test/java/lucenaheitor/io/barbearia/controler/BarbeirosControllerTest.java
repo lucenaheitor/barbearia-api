@@ -49,20 +49,20 @@ class BarbeirosControllerTest {
                 "Test",
                 "test@example.com",
                 "123.456.789-00",
-                "1234567890",
-                Especialidade.CORTE_BARBA );
-        when(service.register(any(CadastroBarbeiroDTO.class)))
-                .thenReturn(dto);
-       var  response =  mockMvc.perform(post("/barbeiros")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nome\":\"Test\", " +
-                        "\"email\":\"test@example.com\", " +
-                        "\"cpf\":\"123.456.789-00\", " +
-                        "\"telefone\":\"1234567890\"," +
-                        " \"especialidade\":\"CORTE\"}"))
-                        .andReturn().getResponse();
+        "1234567890",
+                 Especialidade.CORTE_BARBA );
+         when(service.register(any(CadastroBarbeiroDTO.class)))
+                 .thenReturn(dto);
+         var  response =  mockMvc.perform(post("/barbeiros")
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .content("{\"nome\":\"Test\", " +
+                                 "\"email\":\"test@example.com\", " +
+                                 "\"cpf\":\"123.456.789-00\", " +
+                                 "\"telefone\":\"1234567890\"," +
+                                 " \"especialidade\":\"CORTE\"}"))
+                 .andReturn().getResponse();
 
-                Assertions.assertEquals(201, response.getStatus());
+         Assertions.assertEquals(201, response.getStatus());
         }
 
     @Test

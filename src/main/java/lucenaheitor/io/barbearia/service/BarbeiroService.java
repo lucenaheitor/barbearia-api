@@ -1,4 +1,4 @@
-package lucenaheitor.io.barbearia.infra.service;
+package lucenaheitor.io.barbearia.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;

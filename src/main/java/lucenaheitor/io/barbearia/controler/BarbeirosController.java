@@ -3,10 +3,9 @@ package lucenaheitor.io.barbearia.controler;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;
 import lucenaheitor.io.barbearia.domain.barbeiros.*;
 import lucenaheitor.io.barbearia.domain.barbeiros.DetailsBarbeiros;
-import lucenaheitor.io.barbearia.infra.service.BarbeiroService;
+import lucenaheitor.io.barbearia.service.BarbeiroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/barbeiros")

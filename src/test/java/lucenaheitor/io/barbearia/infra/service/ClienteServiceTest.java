@@ -1,6 +1,7 @@
 package lucenaheitor.io.barbearia.infra.service;
 
 import lucenaheitor.io.barbearia.domain.clientes.*;
+import lucenaheitor.io.barbearia.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

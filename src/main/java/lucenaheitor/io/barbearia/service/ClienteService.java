@@ -1,4 +1,4 @@
-package lucenaheitor.io.barbearia.infra.service;
+package lucenaheitor.io.barbearia.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lucenaheitor.io.barbearia.controler.validation_barbeiros.ValidationBarbeiro;
@@ -30,7 +30,7 @@ public class ClienteService {
 
     public CadastroClienteDTO createCliente(CadastroClienteDTO dto) {
         Cliente cliente = modelmapper.map(dto, Cliente.class);
-        //validadores.forEach(v -> v.validar(dto));
+        validadores.forEach(v -> v.validar(dto));
         clienteRepository.save(cliente);
 
         return modelmapper.map(cliente, CadastroClienteDTO.class);
